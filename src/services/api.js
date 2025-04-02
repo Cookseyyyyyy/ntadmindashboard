@@ -21,11 +21,21 @@ const MOCK_USERS = [
   }
 ];
 
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
+// Check if we're in development mode (localhost)
+const isDevelopment = 
+  window.location.hostname === 'localhost' || 
+  window.location.hostname === '127.0.0.1';
+
+const USE_MOCK = isDevelopment ? import.meta.env.VITE_USE_MOCK === 'true' : false;
+
+// API URL - hardcoded for production
+const API_URL = isDevelopment 
+  ? import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+  : 'https://nicetouchapp-2ux5n.kinsta.app/api';
 
 // Create an axios instance with base URL from environment variables
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },

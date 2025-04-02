@@ -7,8 +7,8 @@ import {
   onAuthStateChanged 
 } from "firebase/auth";
 
-// Fallback Firebase config for production if env variables aren't loaded
-const fallbackConfig = {
+// Production Firebase config - always use this in production
+const prodConfig = {
   apiKey: "AIzaSyBlWkV82IsnmYSfCJGArvql1410CG5L5W8",
   authDomain: "nice-touch.firebaseapp.com",
   projectId: "nice-touch",
@@ -18,18 +18,26 @@ const fallbackConfig = {
   measurementId: "G-YPJJ61TBW3"
 };
 
-// Your web app's Firebase configuration from env or fallback
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || fallbackConfig.apiKey,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || fallbackConfig.authDomain,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || fallbackConfig.projectId,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || fallbackConfig.storageBucket,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || fallbackConfig.messagingSenderId,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || fallbackConfig.appId,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || fallbackConfig.measurementId
-};
+// Check if we're in development mode (localhost)
+const isDevelopment = 
+  window.location.hostname === 'localhost' || 
+  window.location.hostname === '127.0.0.1';
 
-console.log('Firebase config:', { ...firebaseConfig, apiKey: firebaseConfig.apiKey ? "PRESENT" : "MISSING" });
+// Use environment variables in development, hardcoded values in production
+const firebaseConfig = isDevelopment 
+  ? {
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+      appId: import.meta.env.VITE_FIREBASE_APP_ID,
+      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+    }
+  : prodConfig;
+
+console.log('Firebase config mode:', isDevelopment ? 'DEVELOPMENT' : 'PRODUCTION');
+console.log('Firebase API key present:', !!firebaseConfig.apiKey);
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
