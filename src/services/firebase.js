@@ -7,35 +7,26 @@ import {
   onAuthStateChanged 
 } from "firebase/auth";
 
-// Production Firebase config (hardcoded)
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyBlWkV82IsnmYSfCJGArvql1410CG5L5W8",
-  authDomain: "nice-touch.firebaseapp.com",
-  projectId: "nice-touch",
-  storageBucket: "nice-touch.firebasestorage.app",
-  messagingSenderId: "902798100629",
-  appId: "1:902798100629:web:5ed5eb1e576775a874b39c",
-  measurementId: "G-YPJJ61TBW3"
+// Your web app's Firebase configuration from environment variables
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-// Force use of hardcoded config for reliability
-console.log('Initializing Firebase with hardcoded config');
-console.log('Firebase config being used:', JSON.stringify({
-  ...FIREBASE_CONFIG,
-  apiKey: FIREBASE_CONFIG.apiKey ? "PRESENT" : "MISSING"
-}));
-
-let auth;
+// Initialize Firebase
 let app;
+let auth;
 
-// Initialize Firebase with hardcoded config
 try {
-  app = initializeApp(FIREBASE_CONFIG);
+  app = initializeApp(firebaseConfig);
   auth = getAuth(app);
-  console.log('Firebase initialized successfully');
 } catch (error) {
   console.error('Error initializing Firebase:', error);
-  throw error;
 }
 
 // Auth functions

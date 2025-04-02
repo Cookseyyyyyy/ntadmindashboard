@@ -21,15 +21,9 @@ const MOCK_USERS = [
   }
 ];
 
-// Hardcoded settings for reliability
-const USE_MOCK = false;
-const API_URL = 'https://nicetouchapp-2ux5n.kinsta.app/api';
-
-// Log configuration
-console.log('API service initialized with:', { 
-  USE_MOCK, 
-  API_URL 
-});
+// Settings from environment variables
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 // Create an axios instance with base URL from environment variables
 const api = axios.create({
@@ -49,12 +43,9 @@ api.interceptors.request.use(
       try {
         const token = await user.getIdToken();
         config.headers.Authorization = `Bearer ${token}`;
-        console.log('Added auth token to request');
       } catch (error) {
         console.error('Error getting auth token:', error);
       }
-    } else {
-      console.warn('No user logged in, request will be unauthenticated');
     }
     return config;
   },
@@ -71,9 +62,7 @@ export const getUsers = async () => {
   }
   
   try {
-    console.log('Fetching users from API');
     const response = await api.get('/users');
-    console.log('Users API response:', response);
     if (response.data.status === 'success') {
       return { data: response.data.data };
     }
@@ -121,9 +110,7 @@ export const createUser = async (userData) => {
       throw new Error('User creation requires a Firebase user ID');
     }
 
-    console.log('Creating user with data:', userData);
     const response = await api.post('/users/create', userData);
-    console.log('Server response:', response);
     if (response.data.status === 'success') {
       return { data: response.data.data };
     }

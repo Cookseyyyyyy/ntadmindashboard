@@ -1,14 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './components/Auth/Login';
 import Header from './components/Layout/Header';
 import UserList from './components/Users/UserList';
 import './App.css';
-
-// Debug initialization
-console.log('App initializing on:', window.location.hostname);
-console.log('App origin:', window.location.origin);
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
@@ -26,12 +21,6 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
-  useEffect(() => {
-    // Log initialization info
-    console.log('App component mounted');
-    console.log('Environment:', import.meta.env.MODE);
-  }, []);
-
   return (
     <AuthProvider>
       <Router>
