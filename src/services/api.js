@@ -21,17 +21,15 @@ const MOCK_USERS = [
   }
 ];
 
-// Check if we're in development mode (localhost)
-const isDevelopment = 
-  window.location.hostname === 'localhost' || 
-  window.location.hostname === '127.0.0.1';
+// Hardcoded settings for reliability
+const USE_MOCK = false;
+const API_URL = 'https://nicetouchapp-2ux5n.kinsta.app/api';
 
-const USE_MOCK = isDevelopment ? import.meta.env.VITE_USE_MOCK === 'true' : false;
-
-// API URL - hardcoded for production
-const API_URL = isDevelopment 
-  ? import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
-  : 'https://nicetouchapp-2ux5n.kinsta.app/api';
+// Log configuration
+console.log('API service initialized with:', { 
+  USE_MOCK, 
+  API_URL 
+});
 
 // Create an axios instance with base URL from environment variables
 const api = axios.create({
@@ -39,6 +37,8 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // Enable withCredentials for CORS with credentials
+  withCredentials: true
 });
 
 // Add a request interceptor to inject the auth token
@@ -46,8 +46,15 @@ api.interceptors.request.use(
   async (config) => {
     const user = getCurrentUser();
     if (user) {
-      const token = await user.getIdToken();
-      config.headers.Authorization = `Bearer ${token}`;
+      try {
+        const token = await user.getIdToken();
+        config.headers.Authorization = `Bearer ${token}`;
+        console.log('Added auth token to request');
+      } catch (error) {
+        console.error('Error getting auth token:', error);
+      }
+    } else {
+      console.warn('No user logged in, request will be unauthenticated');
     }
     return config;
   },
@@ -64,7 +71,9 @@ export const getUsers = async () => {
   }
   
   try {
+    console.log('Fetching users from API');
     const response = await api.get('/users');
+    console.log('Users API response:', response);
     if (response.data.status === 'success') {
       return { data: response.data.data };
     }

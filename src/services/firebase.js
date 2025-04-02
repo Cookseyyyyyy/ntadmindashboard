@@ -7,8 +7,8 @@ import {
   onAuthStateChanged 
 } from "firebase/auth";
 
-// Production Firebase config - always use this in production
-const prodConfig = {
+// Production Firebase config (hardcoded)
+const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBlWkV82IsnmYSfCJGArvql1410CG5L5W8",
   authDomain: "nice-touch.firebaseapp.com",
   projectId: "nice-touch",
@@ -18,30 +18,25 @@ const prodConfig = {
   measurementId: "G-YPJJ61TBW3"
 };
 
-// Check if we're in development mode (localhost)
-const isDevelopment = 
-  window.location.hostname === 'localhost' || 
-  window.location.hostname === '127.0.0.1';
+// Force use of hardcoded config for reliability
+console.log('Initializing Firebase with hardcoded config');
+console.log('Firebase config being used:', JSON.stringify({
+  ...FIREBASE_CONFIG,
+  apiKey: FIREBASE_CONFIG.apiKey ? "PRESENT" : "MISSING"
+}));
 
-// Use environment variables in development, hardcoded values in production
-const firebaseConfig = isDevelopment 
-  ? {
-      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-      appId: import.meta.env.VITE_FIREBASE_APP_ID,
-      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
-    }
-  : prodConfig;
+let auth;
+let app;
 
-console.log('Firebase config mode:', isDevelopment ? 'DEVELOPMENT' : 'PRODUCTION');
-console.log('Firebase API key present:', !!firebaseConfig.apiKey);
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+// Initialize Firebase with hardcoded config
+try {
+  app = initializeApp(FIREBASE_CONFIG);
+  auth = getAuth(app);
+  console.log('Firebase initialized successfully');
+} catch (error) {
+  console.error('Error initializing Firebase:', error);
+  throw error;
+}
 
 // Auth functions
 export const loginWithEmailAndPassword = (email, password) => {
