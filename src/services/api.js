@@ -9,7 +9,9 @@ const MOCK_USERS = [
     displayName: 'Admin User',
     role: 'admin',
     isActive: true,
-    createdAt: '2023-01-01T00:00:00Z'
+    createdAt: '2023-01-01T00:00:00Z',
+    stripeCustomerId: 'cus_mock1',
+    subscriptionTier: 'team'
   },
   {
     id: '2',
@@ -17,9 +19,33 @@ const MOCK_USERS = [
     displayName: 'Regular User',
     role: 'user',
     isActive: true, 
-    createdAt: '2023-01-02T00:00:00Z'
+    createdAt: '2023-01-02T00:00:00Z',
+    stripeCustomerId: 'cus_mock2',
+    subscriptionTier: 'personal'
   }
 ];
+
+// Mock subscription data
+const MOCK_SUBSCRIPTIONS = {
+  '1': {
+    subscription: {
+      id: 'sub_mock1',
+      status: 'active',
+      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    hasSubscription: true,
+    subscriptionTier: 'team'
+  },
+  '2': {
+    subscription: {
+      id: 'sub_mock2',
+      status: 'active',
+      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    hasSubscription: true,
+    subscriptionTier: 'personal'
+  }
+};
 
 // Settings from environment variables
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
@@ -97,7 +123,9 @@ export const createUser = async (userData) => {
     const newUser = {
       id: Date.now().toString(),
       ...userData,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      stripeCustomerId: null,
+      subscriptionTier: 'free'
     };
     MOCK_USERS.push(newUser);
     return { data: newUser };
@@ -166,6 +194,35 @@ export const deleteUser = async (id) => {
     return response.data;
   } catch (error) {
     console.error(`Error deleting user ${id}:`, error);
+    throw error;
+  }
+};
+
+// Subscription API functions
+export const getUserSubscription = async (userId) => {
+  if (USE_MOCK) {
+    const mockSubscription = MOCK_SUBSCRIPTIONS[userId];
+    if (mockSubscription) {
+      return { data: mockSubscription };
+    }
+    // Return a default free tier if no mock subscription exists
+    return { 
+      data: {
+        subscription: null,
+        hasSubscription: false,
+        subscriptionTier: 'free'
+      }
+    };
+  }
+  
+  try {
+    const response = await api.get(`/billing/subscription/${userId}`);
+    if (response.data.status === 'success') {
+      return { data: response.data.data };
+    }
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching subscription for user ${userId}:`, error);
     throw error;
   }
 };

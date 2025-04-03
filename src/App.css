@@ -428,3 +428,149 @@ body {
     max-width: 90%;
   }
 }
+
+/* Subscription Tier Badges */
+.subscription-tier {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  margin-right: 8px;
+}
+
+.subscription-tier.free {
+  background-color: #e0e0e0;
+  color: #666;
+}
+
+.subscription-tier.personal {
+  background-color: #bbdefb;
+  color: #1565c0;
+}
+
+.subscription-tier.team {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+/* View Subscription Button */
+.view-subscription-button {
+  background-color: transparent;
+  border: 1px solid #666;
+  color: #666;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-subscription-button:hover {
+  background-color: #f0f0f0;
+  border-color: #333;
+  color: #333;
+}
+
+/* Subscription Details Modal */
+.subscription-details-modal {
+  width: 100%;
+  max-width: 500px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.subscription-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.subscription-details-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.subscription-details-body {
+  padding: 20px;
+}
+
+.subscription-status {
+  margin-bottom: 24px;
+}
+
+.subscription-status h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  color: #666;
+}
+
+.subscription-details-body .subscription-tier {
+  font-size: 1rem;
+  padding: 6px 12px;
+}
+
+.subscription-info h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1rem;
+  color: #666;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 8px 16px;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #555;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+
+.status-badge.active {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.status-badge.inactive {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+
+.status-badge.trialing {
+  background-color: #fff9c4;
+  color: #f57f17;
+}
+
+.no-subscription {
+  background-color: #f5f5f5;
+  padding: 16px;
+  border-radius: 4px;
+  color: #666;
+}

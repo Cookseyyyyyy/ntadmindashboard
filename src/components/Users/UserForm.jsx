@@ -8,6 +8,7 @@ const UserForm = ({ user, onSubmit, onCancel }) => {
     displayName: '',
     role: 'user',
     isActive: true,
+    subscriptionTier: 'free',
     password: ''
   });
   const [loading, setLoading] = useState(false);
@@ -24,6 +25,7 @@ const UserForm = ({ user, onSubmit, onCancel }) => {
         displayName: user.displayName || '',
         role: user.role || 'user',
         isActive: user.isActive ?? true,
+        subscriptionTier: user.subscriptionTier || 'free',
         password: ''
       });
     }
@@ -147,6 +149,21 @@ const UserForm = ({ user, onSubmit, onCancel }) => {
           >
             <option value="user">User</option>
             <option value="admin">Admin</option>
+          </select>
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="subscriptionTier">Subscription Tier</label>
+          <select
+            id="subscriptionTier"
+            name="subscriptionTier"
+            value={formData.subscriptionTier}
+            onChange={handleChange}
+            disabled={loading}
+          >
+            <option value="free">Free</option>
+            <option value="personal">Personal</option>
+            <option value="team">Team</option>
           </select>
         </div>
         

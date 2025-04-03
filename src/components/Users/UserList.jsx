@@ -142,6 +142,7 @@ const UserList = () => {
               <th>Display Name</th>
               <th>Role</th>
               <th>Status</th>
+              <th>Subscription</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -152,6 +153,13 @@ const UserList = () => {
                 <td>{user.displayName || '-'}</td>
                 <td>{user.role}</td>
                 <td>{user.isActive ? 'Active' : 'Inactive'}</td>
+                <td>
+                  <span className={`subscription-tier ${user.subscriptionTier || 'free'}`}>
+                    {user.subscriptionTier ? 
+                      user.subscriptionTier.charAt(0).toUpperCase() + user.subscriptionTier.slice(1) : 
+                      'Free'}
+                  </span>
+                </td>
                 <td className="action-buttons">
                   <button 
                     className="edit-button"
